@@ -3,14 +3,14 @@ const bartKey = process.env.BART_API_KEY;
 
 module.exports = (app) => {
 
-    const getDayAndTime = () => { 
+    const getTime = () => { 
         const date = new Date();
 
         const hour = date.getHours();
         const minutes = date.getMinutes();
 
         return [ hour, minutes];
-    }
+    };
 
     const callBartAPI = async () => {
         try{
@@ -21,69 +21,142 @@ module.exports = (app) => {
         }
     };
 
+    if( (getTime[0] > 19) && ( getTime[1] < 46) ){
+        return weekdaySchedule = async () => {
 
-    const weekdaySchedule = async () => {
-
-        const getStationData = await callBartAPI();
-        const stationNamesAndTimes =  getStationData.data.root;
-
-        const afterSevenBeforeEightStationsAndTimes = {
-            "WarmToDaly": {
-                "Arrival1": beforeSixData.station[41].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[41].etd[0].estimate[1].minutes
-            },
-            "WarmToRich": {
-                "Arrival1": beforeSixData.station[41].etd[1].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[41].etd[1].estimate[1].minutes
-            },
-            /**check this 8:20pm */
-            "DublToDaly": {
-                "Arrival1": beforeSixData.station[24].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[24].etd[0].estimate[1].minutes
-            },
-           
-            "AntcToMLBR": {
-                "Arrival1": beforeSixData.station[18].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[18].etd[0].estimate[1].minutes
-            },
-            "RichToDaly": {
-                "Arrival1": beforeSixData.station[40].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[40].etd[0].estimate[1].minutes
-            },
-            "RichToWarm": {
-                "Arrival1": beforeSixData.station[40].etd[1].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[40].etd[1].estimate[1].minutes
-            },
-            "DalyToAntc": {
-                "Arrival1": beforeSixData.station[34].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[0].estimate[1].minutes,
-            },
-            "DalyToAntc": {
-                "Arrival1": beforeSixData.station[34].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[0].estimate[1].minutes,
-            },
-            /** Check route time: 8:11pm */
-            "DalyToDubl": {
-                "Arrival1": beforeSixData.station[34].etd[1].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[1].estimate[1].minutes,
-            },
-            "DalyToRich": {
-                "Arrival1": beforeSixData.station[34].etd[2].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[2].estimate[1].minutes,
-            },
-            /** check daly to SFO weekday. time rn < 9 */
-            "DalyToSFO": {
-                "Arrival1": beforeSixData.station[34].etd[3].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[3].estimate[1].minutes,
-            },
-            "DalyToWarm": {
-                "Arrival1": beforeSixData.station[34].etd[4].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[34].etd[4].estimate[1].minutes,
-            },
-            "SFOToAntc": {
-                "Arrival1": beforeSixData.station[46].etd[0].estimate[0].minutes,
-                "Arrival2": beforeSixData.station[46].etd[0].estimate[1].minutes,
-            }
+            const weekTime = getTime();
+            const getStationData = await callBartAPI();
+            const stationNamesAndTimes =  getStationData.data.root;
+    
+            const afterSevenBeforeEightStationsAndTimes = {
+                "WarmToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[41].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[41].etd[0].estimate[1].minutes
+                },
+                "WarmToRich": {
+                    "Arrival1": stationNamesAndTimes.station[41].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[41].etd[1].estimate[1].minutes
+                },
+                /**check this 8:20pm */
+                "DublToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[24].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[24].etd[0].estimate[1].minutes
+                },
+               
+                "AntcToMLBR": {
+                    "Arrival1": stationNamesAndTimes.station[18].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[18].etd[0].estimate[1].minutes
+                },
+                "RichToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[40].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[40].etd[0].estimate[1].minutes
+                },
+                "RichToWarm": {
+                    "Arrival1": stationNamesAndTimes.station[40].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[40].etd[1].estimate[1].minutes
+                },
+                "DalyToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
+                },
+                "DalyToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
+                },
+                /** Check route time: 8:11pm */
+                "DalyToDubl": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[1].estimate[1].minutes,
+                },
+                "DalyToRich": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[2].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[2].estimate[1].minutes,
+                },
+                "DalyToSFO": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[3].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[3].estimate[1].minutes,
+                },
+                "DalyToWarm": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[4].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[4].estimate[1].minutes,
+                },
+                "SFOToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[46].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[46].etd[0].estimate[1].minutes,
+                }
+            };
         };
-    };
+    }
+    if( ((getTime[0] > 19) && (getTime[1] >= 46)) && ( getTime[0] < 20)){
+        /**
+         *  if the time is between 7:46pm and 9pm, return these stations and times
+         */
+
+        return weekdaySchedule = async () => {
+            const getStationData = await callBartAPI();
+            const stationNamesAndTimes =  getStationData.data.root;
+
+            return afterEightStationsAndTimes = {
+                "WarmToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[41].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[41].etd[0].estimate[1].minutes
+                },
+                "WarmToRich": {
+                    "Arrival1": stationNamesAndTimes.station[41].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[41].etd[1].estimate[1].minutes
+                },
+                /**check this 8:20pm */
+                "DublToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[24].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[24].etd[0].estimate[1].minutes
+                },
+            
+                "AntcToMLBR": {
+                    "Arrival1": stationNamesAndTimes.station[18].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[18].etd[0].estimate[1].minutes
+                },
+                "RichToDaly": {
+                    "Arrival1": stationNamesAndTimes.station[40].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[40].etd[0].estimate[1].minutes
+                },
+                "RichToWarm": {
+                    "Arrival1": stationNamesAndTimes.station[40].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[40].etd[1].estimate[1].minutes
+                },
+                "DalyToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
+                },
+                "DalyToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
+                },
+                /** Check route time: 8:11pm */
+                "DalyToDubl": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[1].estimate[1].minutes,
+                },
+                "DalyToRich": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[2].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[2].estimate[1].minutes,
+                },
+                "DalyToSFO": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[3].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[3].estimate[1].minutes,
+                },
+                "DalyToWarm": {
+                    "Arrival1": stationNamesAndTimes.station[34].etd[4].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[34].etd[4].estimate[1].minutes,
+                },
+                "SFOToAntc": {
+                    "Arrival1": stationNamesAndTimes.station[46].etd[0].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[46].etd[0].estimate[1].minutes,
+                },
+                "SFOToMLBR": {
+                    "Arrival1": stationNamesAndTimes.station[46].etd[1].estimate[0].minutes,
+                    "Arrival2": stationNamesAndTimes.station[46].etd[1].estimate[1].minutes,
+                }
+            };
+        }
+    }        
 }

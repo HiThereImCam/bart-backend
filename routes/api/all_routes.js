@@ -34,7 +34,7 @@ module.exports = (app) => {
          *  BayFair to Dublin - last train is at 1:12am
          *  Richmond to Warm Springs - last train 12:17pm
          *  Warm Springs to Richmond - last train 11:57pm
-         *  Richmond to Millbrae - last train 7:40pm 
+         *  
          *  SFO to Millbrae - Still part of Antioch line?
          *  Daly to SFO  till 9 and then Daly to Millbrae after
          *  Which means < 9 Need to get data for SFO to Mill = purple line
@@ -46,10 +46,10 @@ module.exports = (app) => {
             const weekData = weekdaySchedule(app); 
             const beforeSevenData = await weekData();
 
-            if(beforeSixData["DalyToWarm"].Arrival2 === null){
+            if(beforeSevenData["DalyToWarm"].Arrival2 === null){
                 beforeSevenData["DalyToWarm"].Arrival2 = "Last train from Daly City to Warm Springs arrives 6:57pm";
             }
-            res.send(beforeSixData);
+            res.send(beforeSevenData);
         } 
 
         if((dayAndTime[0] > 0 && dayAndTime[0] < 6) && (dayAndTime[1] > 19)){
@@ -61,7 +61,7 @@ module.exports = (app) => {
                 afterSevenData["DalyToSFO"].Arrival2 = "Last train from Daly City to SFO arrives at 8:33pm";
             }
             
-            res.send(beforeSixData);
+            res.send(afterSevenData);
         } 
 
 

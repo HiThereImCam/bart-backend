@@ -17,6 +17,8 @@ module.exports = (app) => {
         const getStationData = await callBartAPI();
         const stationNamesAndTimes =  getStationData.data.root;
 
+        
+
         return beforeSevenStationsAndTimes = {
             "WarmToDaly": {
                 "Arrival1": stationNamesAndTimes.station[41].etd[0].estimate[0].minutes,
@@ -36,7 +38,7 @@ module.exports = (app) => {
                 "Arrival1": stationNamesAndTimes.station[18].etd[0].estimate[0].minutes,
                 "Arrival2": stationNamesAndTimes.station[18].etd[0].estimate[1].minutes
             },
-            "RichToDaly": {
+            "RichToMLBR": {
                 "Arrival1": stationNamesAndTimes.station[40].etd[0].estimate[0].minutes,
                 "Arrival2": stationNamesAndTimes.station[40].etd[0].estimate[1].minutes
             },
@@ -72,6 +74,10 @@ module.exports = (app) => {
             "SFOToAntc": {
                 "Arrival1": stationNamesAndTimes.station[46].etd[0].estimate[0].minutes,
                 "Arrival2": stationNamesAndTimes.station[46].etd[0].estimate[1].minutes,
+            },
+            "SFOToMLBR": {
+                "Arrival1": stationNamesAndTimes.station[46].etd[1].estimate[0].minutes,
+                "Arrival2": stationNamesAndTimes.station[46].etd[1].estimate[1].minutes,
             }
         };
     };
