@@ -14,8 +14,9 @@ const app = express();
 
 require('dotenv').config();
 require('./routes')(app);
+// require('./routes/api/all_routes');
 
-
+require('./routes');
 
 const bartKey = process.env.BART_API_KEY;
 const port = process.env.PORT || 5000;

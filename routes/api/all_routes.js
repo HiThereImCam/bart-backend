@@ -1,14 +1,13 @@
-const axios = require('axios');
 const bartKey = process.env.BART_API_KEY;
-
+const weekdaySchedule = require('./weekday_schedule');
 
 module.exports = (app) => {
-
+    
     /**
      * Get the day and time
      * 
      */
-    function getDayAndTime(){
+    const getDayAndTime = () => { 
         const date = new Date();
 
         const day = date.getDay();
@@ -17,28 +16,6 @@ module.exports = (app) => {
 
         return [day, hour, minutes];
     }    
-    
-    /*
-     *  Async/await returns a promise
-     *  Call Bart API 
-     */
-
-     const callBartAPI = async () => {
-        try{
-            const response = await axios.get(
-                `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key=${bartKey}&json=y`);
-            return response;
-        }catch(e){
-            console.log(`Error: ${e}`);
-        }
-    };
-
-    /**
-     * Call Bart API every 1.50 minutes
-     * This works. Need to work on testing function for this
-     */
-    setInterval(() => callBartAPI(), 111000);
-
 
     /**
      * Update the time
@@ -51,70 +28,45 @@ module.exports = (app) => {
         
         const dayAndTime = getDayAndTime();
 
-        const getStationData = await callBartAPI();
-        const allStationData = getStationData.data.root;
-        
-        // res.send(allStationData.station[41]);
-      
+        /**
+         *  Need to take care of special cases: 
+         * 
+         *  BayFair to Dublin - last train is at 1:12am
+         *  Richmond to Warm Springs - last train 12:17pm
+         *  Warm Springs to Richmond - last train 11:57pm
+         *  Richmond to Millbrae - last train 7:40pm 
+         *  SFO to Millbrae - Still part of Antioch line?
+         *  Daly to SFO  till 9 and then Daly to Millbrae after
+         *  Which means < 9 Need to get data for SFO to Mill = purple line
+         * 
+         */
 
-        if((dayAndTime[0] > 0 && dayAndTime[0] <= 6) && (dayAndTime[1] < 19)){
-            const baseStationsAndTimes = {
-                "WarmToDaly": {
-                    "Arrival1": allStationData.station[41].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[41].etd[0].estimate[1].minutes
-                },
-                "WarmToRich": {
-                    "Arrival1": allStationData.station[41].etd[1].estimate[0].minutes,
-                    "Arrival2": allStationData.station[41].etd[1].estimate[1].minutes
-                },
-                "DublToDaly": {
-                    "Arrival1": allStationData.station[24].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[24].etd[0].estimate[1].minutes
-                },
-                "AntcToMLBR": {
-                    "Arrival1": allStationData.station[18].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[18].etd[0].estimate[1].minutes
-                },
-                "RichToDaly": {
-                    "Arrival1": allStationData.station[40].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[40].etd[0].estimate[1].minutes
-                },
-                "RichToWarm": {
-                    "Arrival1": allStationData.station[40].etd[1].estimate[0].minutes,
-                    "Arrival2": allStationData.station[24].etd[1].estimate[1].minutes
-                },
-                "DalyToAntc": {
-                    "Arrival1": allStationData.station[34].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[0].estimate[1].minutes,
-                },
-                "DalyToAntc": {
-                    "Arrival1": allStationData.station[34].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[0].estimate[1].minutes,
-                },
-                "DalyToDubl": {
-                    "Arrival1": allStationData.station[34].etd[1].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[1].estimate[1].minutes,
-                },
-                "DalyToRich": {
-                    "Arrival1": allStationData.station[34].etd[2].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[2].estimate[1].minutes,
-                },
-                "DalyToSFO": {
-                    "Arrival1": allStationData.station[34].etd[3].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[3].estimate[1].minutes,
-                },
-                "DalyToWarm": {
-                    "Arrival1": allStationData.station[34].etd[4].estimate[0].minutes,
-                    "Arrival2": allStationData.station[34].etd[4].estimate[1].minutes,
-                },
-                "SFOToAntc": {
-                    "Arrival1": allStationData.station[46].etd[0].estimate[0].minutes,
-                    "Arrival2": allStationData.station[46].etd[0].estimate[1].minutes,
-                }
-            };
+        if((dayAndTime[0] > 0 && dayAndTime[0] < 6) && (dayAndTime[1] < 19)){
+            
+            const weekData = weekdaySchedule(app); 
+            const beforeSevenData = await weekData();
 
-            res.send(baseStationsAndTimes);
-        }
+            if(beforeSixData["DalyToWarm"].Arrival2 === null){
+                beforeSevenData["DalyToWarm"].Arrival2 = "Last train from Daly City to Warm Springs arrives 6:57pm";
+            }
+            res.send(beforeSixData);
+        } 
+
+        if((dayAndTime[0] > 0 && dayAndTime[0] < 6) && (dayAndTime[1] > 19)){
+            
+            const weekData = weekdaySchedule(app); 
+            const afterSevenData = await weekData();
+
+            if(afterSevenData["DalyToSFO"].Arrival2 === null ){
+                afterSevenData["DalyToSFO"].Arrival2 = "Last train from Daly City to SFO arrives at 8:33pm";
+            }
+            
+            res.send(beforeSixData);
+        } 
+
+
+
+       
     
         // if(dateAndTime[0] === 1){
         //    console.log(sundaySchedule);
@@ -122,3 +74,4 @@ module.exports = (app) => {
 
     })
 }
+
