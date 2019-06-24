@@ -30,59 +30,55 @@ module.exports = (app) => {
     
             const afterSevenBeforeEightStationsAndTimes = {
                 "WarmToDaly": {
-                    "Arrival1": stationNamesAndTimes.station[41].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[41].etd[0].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[41].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[41].etd[0].estimate[1].minutes
                 },
                 "WarmToRich": {
-                    "Arrival1": stationNamesAndTimes.station[41].etd[1].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[41].etd[1].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[41].etd[1].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[41].etd[1].estimate[1].minutes
                 },
                 /**check this 8:20pm */
                 "DublToDaly": {
-                    "Arrival1": stationNamesAndTimes.station[24].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[24].etd[0].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[24].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[24].etd[0].estimate[1].minutes
                 },
                
                 "AntcToMLBR": {
-                    "Arrival1": stationNamesAndTimes.station[18].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[18].etd[0].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[18].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[18].etd[0].estimate[1].minutes
                 },
                 "RichToDaly": {
-                    "Arrival1": stationNamesAndTimes.station[40].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[40].etd[0].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[40].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[40].etd[0].estimate[1].minutes
                 },
                 "RichToWarm": {
-                    "Arrival1": stationNamesAndTimes.station[40].etd[1].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[40].etd[1].estimate[1].minutes
+                    "1": stationNamesAndTimes.station[40].etd[1].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[40].etd[1].estimate[1].minutes
                 },
                 "DalyToAntc": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
-                },
-                "DalyToAntc": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
                 },
                 /** Check route time: 8:11pm */
                 "DalyToDubl": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[1].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[1].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[34].etd[1].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[34].etd[1].estimate[1].minutes,
                 },
                 "DalyToRich": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[2].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[2].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[34].etd[2].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[34].etd[2].estimate[1].minutes,
                 },
                 "DalyToSFO": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[3].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[3].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[34].etd[3].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[34].etd[3].estimate[1].minutes,
                 },
                 "DalyToWarm": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[4].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[4].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[34].etd[4].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[34].etd[4].estimate[1].minutes,
                 },
                 "SFOToAntc": {
-                    "Arrival1": stationNamesAndTimes.station[46].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[46].etd[0].estimate[1].minutes,
+                    "1": stationNamesAndTimes.station[46].etd[0].estimate[0].minutes,
+                    "2": stationNamesAndTimes.station[46].etd[0].estimate[1].minutes,
                 }
             };
         };
@@ -122,10 +118,6 @@ module.exports = (app) => {
                 "RichToWarm": {
                     "Arrival1": stationNamesAndTimes.station[40].etd[1].estimate[0].minutes,
                     "Arrival2": stationNamesAndTimes.station[40].etd[1].estimate[1].minutes
-                },
-                "DalyToAntc": {
-                    "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
-                    "Arrival2": stationNamesAndTimes.station[34].etd[0].estimate[1].minutes,
                 },
                 "DalyToAntc": {
                     "Arrival1": stationNamesAndTimes.station[34].etd[0].estimate[0].minutes,
