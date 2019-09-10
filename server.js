@@ -32,24 +32,64 @@ app.get('/', (req,res) => {
     res.send(`Port ${port}`);
 })
 
-const callBartAPI = async (routes) => {
+const getStationInfo = async (origin, destination) => {
     try{
-        return response = await axios.get(
-            `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${routes}&key=${bartKey}&json=y`);
+        // return response = await axios.get(
+        //     `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${routes}&key=${bartKey}&json=y`);
+        let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${origin}&key=${bartKey}&json=y`)
+        let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${origin}&dest=${destination}&date=today&key=${bartKey}&json=y` )
+
+        return {
+            routes: routeRes,
+            fare: fareRes
+        }
     }catch(e){
         console.log(`Error: ${e}`);
     }
 };
 
+let manageRoutes = ( routes, destination ) => {
+    const destinationData = routes.data.root.station[0];
+    const dataUnavailable = "Data is unavailable at this time";
+    let stationDepartures = {};
 
-// app.get('/test', (req,res) => {
+    for( let i = 0; i < destinationData.etd.length; i++){
+        if(destinationData.etd[i].abbreviation === destination){
+            let stationEstimates = destinationData.etd[i].estimate;
+            stationDepartures = {
+                firstArrival: stationEstimates[0].minutes,
+                secondArrival: stationEstimates[1] !== undefined ? stationEstimates[1].minutes : dataUnavailable 
+            }
+        }
+    }
+
+    return stationDepartures;
+}
+
+let manageFares = ( fare ) => {
+    const fareData = fare.data.root.fares.fare;
+    let allFareData = {
+        clipper:{
+            name: fareData[0]['@name'],
+            amount: fareData[0]['@amount']
+        },
+        ticket:{
+            name: fareData[1]['@name'],
+            amount: fareData[1]['@amount']
+        },
+        senior:{
+            name: fareData[2]['@name'],
+            amount: fareData[2]['@amount']
+        },
+        youth:{
+            name: fareData[3]['@name'],
+            amount: fareData[3]['@amount']
+        },
+    };
     
-//     const hayward = "HAYW";
-//     callBartAPI(hayward).then( apiResponse => {
-//         console.log(apiResponse.data.root.station)
-//     })
+    return allFareData;
+}
 
-// })
 
 app.post('/submission', (req,res) => {
     // console.log(req.body.station);
@@ -57,27 +97,20 @@ app.post('/submission', (req,res) => {
     const destination = req.body.destination;
     console.log(station);
 
-    callBartAPI(station).then( apiResponse => {
+    getStationInfo(station, destination).then( apiResponse => {
         // res.send( apiResponse.data.root.station )
-        const destinationData = apiResponse.data.root.station[0];
-        const dataUnavailable = "Data is unavailable at this time";
-        // res.send(destinationData.etd);
 
-        // console.log(destinationData.etd[0])
-
-        for( let i = 0; i < destinationData.etd.length; i++){
-            if(destinationData.etd[i].abbreviation === destination){
-                let stationEstimates = destinationData.etd[i].estimate;
-                let stationDepartures = {
-                    firstArrival: stationEstimates[0].minutes,
-                    secondArrival: stationEstimates[1] !== undefined ? stationEstimates[1].minutes : dataUnavailable 
-                }
-                
-                res.send(JSON.stringify(stationDepartures));
-                
-            }
-            // console.log(destinationData.etd[i]);
+        const { routes, fare } = apiResponse;
+        let departures = manageRoutes( routes, destination );
+        let fares = manageFares( fare )
+        let departuresAndFares = {
+            departures: departures,
+            fares: fares
         }
+
+        // console.log( departuresAndFares );
+
+        res.send(JSON.stringify(departuresAndFares))
     })
 })
 
