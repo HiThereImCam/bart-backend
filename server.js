@@ -1,7 +1,4 @@
 /*
-    not sure what body-parser is
-    go back and check
-
     not gonna have bcrypt just yet
 */
 
@@ -15,9 +12,10 @@ require('dotenv').config();
 require('./routes')(app);
 // require('./routes/api/all_routes');
 
-require('./routes');
+// require('./routes');
 
 const bartKey = process.env.BART_API_KEY;
+const eventbriteKey = process.env.EVENTBRITE_API_KEY;
 const port = process.env.PORT || 5000;
 
 app.use(cors());
@@ -38,10 +36,11 @@ const getStationInfo = async (origin, destination) => {
         //     `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${routes}&key=${bartKey}&json=y`);
         let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${origin}&key=${bartKey}&json=y`)
         let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${origin}&dest=${destination}&date=today&key=${bartKey}&json=y` )
-
+        let longlatRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${destination}&key=${bartKey}&json=y` )
         return {
             routes: routeRes,
-            fare: fareRes
+            fare: fareRes,
+            longLat: longlatRes
         }
     }catch(e){
         console.log(`Error: ${e}`);
@@ -91,27 +90,26 @@ let manageFares = ( fare ) => {
 }
 
 
-app.post('/submission', (req,res) => {
+app.get('/route-submission', (req,res) => {
     // console.log(req.body.station);
-    const station = req.body.station;
-    const destination = req.body.destination;
+    const station = req.query.station;
+    const destination = req.query.destination;
     console.log(station);
 
     getStationInfo(station, destination).then( apiResponse => {
-        // res.send( apiResponse.data.root.station )
 
-        const { routes, fare } = apiResponse;
+        const { routes, fare, longLat } = apiResponse;
         let departures = manageRoutes( routes, destination );
         let fares = manageFares( fare )
+
         let departuresAndFares = {
             departures: departures,
             fares: fares
         }
-
-        // console.log( departuresAndFares );
-
         res.send(JSON.stringify(departuresAndFares))
     })
+
+
 })
 
 
