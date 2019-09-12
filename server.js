@@ -15,7 +15,7 @@ require('./routes')(app);
 // require('./routes');
 
 const bartKey = process.env.BART_API_KEY;
-const eventbriteKey = process.env.EVENTBRITE_API_KEY;
+const eventbriteKey = process.env.EVENTBRITE_PRIVATE_KEY;
 const port = process.env.PORT || 5000;
 
 app.use(cors());
@@ -46,6 +46,24 @@ const getStationInfo = async (origin, destination) => {
         console.log(`Error: ${e}`);
     }
 };
+
+let config = {
+    headers: {
+        'Authorization': `Bearer ${eventbriteKey}`
+    }
+}
+
+const getEventInfo = async() => {
+    try{
+        let test = await 
+                   axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=date&price=free&start_date.keyword=today&date_modified.keyword=today&search_type=promoted}`, 
+                              config
+                   )
+        return test;
+    } catch(e){
+        console.log(`Error: ${e}`);
+    }
+}
 
 let manageRoutes = ( routes, destination ) => {
     const destinationData = routes.data.root.station[0];
@@ -108,8 +126,12 @@ app.get('/route-submission', (req,res) => {
         }
         res.send(JSON.stringify(departuresAndFares))
     })
-
-
 })
 
+app.get('/test-event', (req,res) => {
+
+    getEventInfo().then( apiResponse => {
+        console.log(apiResponse);
+    })
+})
 
