@@ -30,21 +30,24 @@ app.get('/', (req,res) => {
     res.send(`Port ${port}`);
 })
 
-const getStationInfo = async (origin, destination) => {
+let config = {
+    headers: {
+        'Authorization': `Bearer ${eventbriteKey}`
+    }
+}
+
+const getAllInfo = async (origin, destination) => {
     try{
-        // return response = await axios.get(
-        //     `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${routes}&key=${bartKey}&json=y`);
+        
         let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${origin}&key=${bartKey}&json=y`)
         let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${origin}&dest=${destination}&date=today&key=${bartKey}&json=y` )
         let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${destination}&key=${bartKey}&json=y` )
-                                    .then( async apiResponse => {
+                                   .then( async apiResponse => {
                                         let longLatData = manageLongLat( apiResponse );
-                                        console.log( longLatData )
-
                                         const { longitude, latitude } = longLatData;
 
                                         return await axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`,
-                                               config)
+                                                config)
                                     })
         
         return {
@@ -57,29 +60,7 @@ const getStationInfo = async (origin, destination) => {
     }
 };
 
-let config = {
-    headers: {
-        'Authorization': `Bearer ${eventbriteKey}`
-    }
-}
 
-//&start_date.keyword=tomorrow&date_modified.keyword=tomorrow&include_adult_events=true
-//&location.within=5mi&location.latitude=37.7929&location.longitude=122.3969
-
-// const getEventInfo = async( longLat ) => {
-//     try{
-//         const { longitude, latitude  } = longLat;
-        
-//         let eventRes = await 
-//                    axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`, 
-//                               config
-//                    )
-        
-//         return eventRes
-//     } catch(e){
-//         console.log(`Error: ${e}`);
-//     }
-// }
 
 /**
  * 
@@ -168,7 +149,6 @@ let manageEvents = ( events ) => {
      * 
      */
     for( let i = 0; i < 5; i++){
-        // let obj = [];
        obj.push({
            eventName: eventData[i].name,
            eventURL: eventData[i].url,
@@ -176,7 +156,6 @@ let manageEvents = ( events ) => {
        })
     }
     
-    // only one came back which shouldnt be a surprise
     return obj
 }
 
@@ -189,7 +168,8 @@ app.get('/route-submission', (req,res) => {
     /**
      * Goal is to pass departures, fares, and events in one JSON object 
      */
-    getStationInfo(station, destination).then( apiResponse => {
+    
+    getAllInfo(station, destination).then( apiResponse => {
 
         
         const { routeData, fareData, eventData } = apiResponse;
