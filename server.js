@@ -36,13 +36,21 @@ const getStationInfo = async (origin, destination) => {
         //     `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${routes}&key=${bartKey}&json=y`);
         let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${origin}&key=${bartKey}&json=y`)
         let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${origin}&dest=${destination}&date=today&key=${bartKey}&json=y` )
-        let longlatRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${destination}&key=${bartKey}&json=y` )
+        let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${destination}&key=${bartKey}&json=y` )
+                                    .then( async apiResponse => {
+                                        let longLatData = manageLongLat( apiResponse );
+                                        console.log( longLatData )
+
+                                        const { longitude, latitude } = longLatData;
+
+                                        return await axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`,
+                                               config)
+                                    })
         
         return {
-            routes: routeRes,
-            fare: fareRes,
-            longLat: longlatRes
-            
+            routeData: routeRes,
+            fareData: fareRes,
+            eventData: eventRes
         }
     }catch(e){
         console.log(`Error: ${e}`);
@@ -58,20 +66,20 @@ let config = {
 //&start_date.keyword=tomorrow&date_modified.keyword=tomorrow&include_adult_events=true
 //&location.within=5mi&location.latitude=37.7929&location.longitude=122.3969
 
-const getEventInfo = async( longLat ) => {
-    try{
-        const { longitude, latitude  } = longLat;
+// const getEventInfo = async( longLat ) => {
+//     try{
+//         const { longitude, latitude  } = longLat;
         
-        let eventRes = await 
-                   axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`, 
-                              config
-                   )
+//         let eventRes = await 
+//                    axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`, 
+//                               config
+//                    )
         
-        return eventRes
-    } catch(e){
-        console.log(`Error: ${e}`);
-    }
-}
+//         return eventRes
+//     } catch(e){
+//         console.log(`Error: ${e}`);
+//     }
+// }
 
 /**
  * 
@@ -87,6 +95,7 @@ let manageRoutes = ( routes, destination ) => {
     let stationDepartures = {};
 
     for( let i = 0; i < destinationData.etd.length; i++){
+        console.log("Abbr", destinationData.etd[i].abbreviation )
         if(destinationData.etd[i].abbreviation === destination){
             let stationEstimates = destinationData.etd[i].estimate;
             stationDepartures = {
@@ -149,7 +158,7 @@ let manageLongLat = ( longLat ) => {
 }
 
 let manageEvents = ( events ) => {
-
+    let eventData = events.data.events;
     let obj = [];
     
     /**
@@ -161,9 +170,9 @@ let manageEvents = ( events ) => {
     for( let i = 0; i < 5; i++){
         // let obj = [];
        obj.push({
-           eventName: events[i].name,
-           eventURL: events[i].url,
-           eventLogo: events[i].logo.url
+           eventName: eventData[i].name,
+           eventURL: eventData[i].url,
+           eventLogo: eventData[i].logo.url
        })
     }
     
@@ -173,82 +182,30 @@ let manageEvents = ( events ) => {
 
 
 app.get('/route-submission', (req,res) => {
-    // console.log(req.body.station);
+
     const station = req.query.station;
     const destination = req.query.destination;
 
-    let routesAndEvents = {};
-    // let longLatData = [];
-
-
+    /**
+     * Goal is to pass departures, fares, and events in one JSON object 
+     */
     getStationInfo(station, destination).then( apiResponse => {
 
-        const { routes, fare, longLat } = apiResponse;
-        let departures = manageRoutes( routes, destination );
-        let fares = manageFares( fare );
-        var longLatData = manageLongLat ( longLat );
+        
+        const { routeData, fareData, eventData } = apiResponse;
+        
+        let departures = manageRoutes( routeData, destination );
+        let fares = manageFares( fareData );
+        let events = manageEvents( eventData );
 
+        let routesAndEvents = {
+            departure: departures,
+            fares: fares,
+            events: events
+        }
 
-        getEventInfo( longLatData ).then( apiResponse => {
-            let eventData = apiResponse.data.events ;
-            // res.send( apiResponse.data.events )
-            let managedEvents = manageEvents( eventData );
-
-
-            res.send( managedEvents )
-            
-        })
-
-        // getEventInfo( longLatData ).then( apiResponse => {
-        //     res.send( apiResponse.data )
-        // })
-
-        // this.getEventInfo(longLatData).bind(this);
-
-
-        // longLatData.assign({
-        //     longLat: longLat
-        // })
-
-        // this.getEventInfo(longitudeAndLatitute);
-       
-        // let test = {
-        //     departures: departures,
-        //     fares: fares
-        // }
-
-        // Object.assign(routesAndEvents, {
-        //     departures: departures,
-        //     fares: fares,
-        //     // longLat: longitudeAndLatitute
-        // })
-
-        // Object.assign( routesAndEvents, test )
-
-        // let departuresAndFares = {
-        //     departures: departures,
-        //     fares: fares
-        // }
-        // res.send(JSON.stringify(departuresAndFares))
+        res.send( routesAndEvents )
     })
-
-   
-    // getEventInfo( destination ).then( apiResponse => {
-    //     console.log("Here")
-        // let events = apiResponse.data;
-
-        // res.send( apiResponse.data );
-        // routesAndEvents.push({
-        //     events: apiResponse.data 
-        // })
-
-        // Object.assign( routesAndEvents, {
-        //     longLat: events
-        // })
-    // })
-
-    // console.log( routesAndEvents );
-    // res.send( routesAndEvents  );
 })
 
 
