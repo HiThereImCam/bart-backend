@@ -36,12 +36,12 @@ let config = {
     }
 }
 
-const getAllInfo = async (origin, destination) => {
+const getAllInfo = async (departure, arrival) => {
     try{
         
-        let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${origin}&key=${bartKey}&json=y`)
-        let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${origin}&dest=${destination}&date=today&key=${bartKey}&json=y` )
-        let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${destination}&key=${bartKey}&json=y` )
+        let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&key=${bartKey}&json=y`)
+        let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${departure}&dest=${arrival}&date=today&key=${bartKey}&json=y` )
+        let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${arrival}&key=${bartKey}&json=y` )
                                    .then( async apiResponse => {
                                         let longLatData = manageLongLat( apiResponse );
                                         const { longitude, latitude } = longLatData;
@@ -72,20 +72,27 @@ const getAllInfo = async (origin, destination) => {
  */
 let manageRoutes = ( routes, destination ) => {
     const destinationData = routes.data.root.station[0];
+
     const dataUnavailable = "Data is unavailable at this time";
     let stationDepartures = {};
 
     for( let i = 0; i < destinationData.etd.length; i++){
-        console.log("Abbr", destinationData.etd[i].abbreviation )
+        
+        /**
+         * Need to create a test case that if abbr != destination
+         * then return error status of some kind
+         */
         if(destinationData.etd[i].abbreviation === destination){
             let stationEstimates = destinationData.etd[i].estimate;
+
             stationDepartures = {
                 firstDeparture: stationEstimates[0].minutes,
                 secondDeparture: stationEstimates[1] !== undefined ? stationEstimates[1].minutes : dataUnavailable 
             }
-        } else return "Abbreviation does not match destination"
+        }
     }
 
+    console.log("Station Departures: ", stationDepartures)
     return stationDepartures;
 }
 
@@ -162,19 +169,24 @@ let manageEvents = ( events ) => {
 
 app.get('/route-submission', (req,res) => {
 
-    const station = req.query.station;
-    const destination = req.query.destination;
+    /**
+     *  departure = station you are departing from 
+     *  arrival = station you are arriving at
+     */
+    const departure = req.query.departure; 
+    const arrival = req.query.arrival;
+   
 
     /**
      * Goal is to pass departures, fares, and events in one JSON object 
      */
     
-    getAllInfo(station, destination).then( apiResponse => {
+    getAllInfo(departure, arrival).then( apiResponse => {
 
         
         const { routeData, fareData, eventData } = apiResponse;
         
-        let departures = manageRoutes( routeData, destination );
+        let departures = manageRoutes( routeData, arrival );
         let fares = manageFares( fareData );
         let events = manageEvents( eventData );
 
