@@ -78,6 +78,9 @@ let manageRoutes = ( routes, destination ) => {
 
     for( let i = 0; i < destinationData.etd.length; i++){
         
+        console.log("destination: ", destination);
+        console.log("abbr: ", destinationData.etd[i].abbreviation);
+
         /**
          * Need to create a test case that if abbr != destination
          * then return error status of some kind
@@ -196,7 +199,7 @@ app.get('/route-submission', (req,res) => {
             events: events
         }
 
-        res.send( routesAndEvents )
+        res.send( JSON.stringify(routesAndEvents) )
     })
 })
 
