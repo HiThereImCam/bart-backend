@@ -10,6 +10,15 @@ let config = {
     }
 }
 
+/**
+ * 
+ * @param {*} departure 
+ * @param {*} arrival 
+ * 
+ * By passing in the (departure, arrival), I am able to make API calls to Bart and Eventbrite
+ * These calls get- route information, fare information, and event information
+ */
+
 const getAllInfo = async (departure, arrival) => {
     try{
 
