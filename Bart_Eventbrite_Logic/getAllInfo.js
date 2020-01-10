@@ -31,8 +31,6 @@ const getAllInfo = async (departure, arrival) => {
        
         
 
-        // console.log("Route data ", routeRes )
-        // console.log("Fare data", fareRes)
         return {
             routeData: routeRes,
             fareData: fareRes,

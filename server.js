@@ -12,14 +12,10 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
-// const bartKey = process.env.BART_API_KEY;
-// const eventbriteKey = process.env.EVENTBRITE_PRIVATE_KEY;
 
 app.use(cors());
-// app.use(express.json());       // to support JSON-encoded bodies
-// app.use(express.urlencoded()); // to support URL-encoded bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({extended: true})); // to support URL-encoded bodies
 
 app.listen(port, () => {
     console.log(`Server is up and listening on port ${port}`);
@@ -29,10 +25,10 @@ app.get('/', (req,res) => {
     res.send(`Port ${port}`);
 })
 
-var { getAllInfo } = require('./getAllInfo.js');
-var { manageEvents } = require('./manageEvents.js');
-var { manageFares } = require('./manageFares.js' )
-var { manageRoutes } = require('./manageRoutes.js')
+var { getAllInfo } = require('./Bart_Eventbrite_Logic/getAllInfo.js');
+var { manageEvents } = require('./Bart_Eventbrite_Logic/manageEvents.js');
+var { manageFares } = require('./Bart_Eventbrite_Logic/manageFares.js' )
+var { manageRoutes } = require('./Bart_Eventbrite_Logic/manageRoutes.js')
 
 app.get('/route-submission', (req,res) => {
 
@@ -43,18 +39,14 @@ app.get('/route-submission', (req,res) => {
     const departure = req.query.departure; 
     const arrival = req.query.arrival;
 
-    /**
-     * Goal is to pass departures, fares, and events in one JSON object 
+    /** 
+     * This grabs all of the necessary info - routes, ticket price, and events
+     * and wraps them all in a single object to pass to the front end.
      */
-    
     getAllInfo(departure, arrival).then( apiResponse => {
 
-        // const { routeData, fareData, eventData } = apiResponse;
-
-       const { routeData, fareData, eventData } = apiResponse;
+        const { routeData, fareData, eventData } = apiResponse;
     
-    //    console.log("routeData", routeData )
-    //    console.log("fareData", fareData)
         
         let departures = manageRoutes( routeData, arrival );
         let fares = manageFares( fareData );

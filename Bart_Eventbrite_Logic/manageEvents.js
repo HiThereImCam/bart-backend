@@ -1,3 +1,12 @@
+/**
+ * 
+ * @param {*} events 
+ * 
+ * Manage events grabs all of the events that are in the radius of the destination
+ * Then it parses it out to the top 5 events and wraps it into an array of objects
+ * 
+ */
+
 let manageEvents = ( events ) => {
     let eventData = events.data.events;
     let obj = [];
