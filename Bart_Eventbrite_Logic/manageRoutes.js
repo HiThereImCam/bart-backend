@@ -1,32 +1,33 @@
 /**
  * 
  * @param { object } routes 
- * @param { string } destination 
+ * @param { string } arrival
  * 
- * Checks if destination abbreviation is the same what is passed to it
+ * Checks if arrival abbreviation is the same what is passed to it
  * Then parses station data to grab the first/second departures
  */
-let manageRoutes = ( routes, destination ) => {
-    const destinationData = routes.data.root.station[0];
+let manageRoutes = ( routes, arrival ) => {
+    const arrivalData = routes.data.root.station[0];
 
-    const dataUnavailable = "Data is unavailable at this time";
+    const dataUnavailable = "Data unavailable";
     let stationDepartures = {};
 
-    for( let i = 0; i < destinationData.etd.length; i++){
+    for( let i = 0; i < arrivalData.etd.length; i++){
         
-        console.log("destination: ", destination);
-        console.log("abbr: ", destinationData.etd[i].abbreviation);
+        console.log("arrival: ", arrivalData.etd[i].destination);
+        console.log("abbr: ", arrivalData.etd[i].abbreviation);
 
         /**
          * Need to create a test case that if abbr != destination
          * then return error status of some kind
          */
-        if(destinationData.etd[i].abbreviation === destination){
-            let stationEstimates = destinationData.etd[i].estimate;
-
+        if(arrivalData.etd[i].abbreviation === arrival){
+            let stationEstimates = arrivalData.etd[i].estimate;
+            console.log(arrivalData.etd[i])
             stationDepartures = {
                 firstDeparture: stationEstimates[0].minutes,
-                secondDeparture: stationEstimates[1] !== undefined ? stationEstimates[1].minutes : dataUnavailable 
+                secondDeparture: stationEstimates[1] !== undefined ? 
+                stationEstimates[1].minutes : dataUnavailable 
             }
         }
     }

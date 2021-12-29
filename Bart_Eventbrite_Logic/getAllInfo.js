@@ -25,17 +25,27 @@ const getAllInfo = async (departure, arrival) => {
         console.log("depart", departure)
         console.log("arrival", arrival)
         
+
         let routeRes = await axios.get(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&key=${bartKey}&json=y`)
         let fareRes = await axios.get( `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${departure}&dest=${arrival}&date=today&key=${bartKey}&json=y` )
-        let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${arrival}&key=${bartKey}&json=y` )
-                                   .then( async apiResponse => {
-                                        let longLatData = manageLongLat( apiResponse );
-                                        const { longitude, latitude } = longLatData;
+        // let eventRes = await axios.get( `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${arrival}&key=${bartKey}&json=y` )
+        //                            .then( async apiResponse => {
+        //                                 let longLatData = manageLongLat( apiResponse );
+        //                                 const { longitude, latitude } = longLatData;
 
-                                        console.log(longLatData)
-                                        return await axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`,
-                                                config)
-                                    })
+        //                                 console.log(longLatData)
+        //                                 try{
+        //                                     return await axios.get(`https://www.eventbriteapi.com/v3/events/search/?sort_by=best&location.latitude=${latitude}&location.longitude=${longitude}&include_adult_events=true`,
+        //                                     config)
+        //                                 }catch(e){
+        //                                     return {
+        //                                         message: "Unable to receive events. If covid, then there are no events. Else check logs"
+        //                                     }
+        //                                 }
+                                        
+        //                             })
+        
+      
         
        
         
@@ -43,10 +53,10 @@ const getAllInfo = async (departure, arrival) => {
         return {
             routeData: routeRes,
             fareData: fareRes,
-            eventData: eventRes
+            // eventData: eventRes
         }
     }catch(e){
-        console.log(`getAllInfo Error: ${e}`);
+        console.log(`getAllInfo: ${e.message}`);
     }
 };
 
