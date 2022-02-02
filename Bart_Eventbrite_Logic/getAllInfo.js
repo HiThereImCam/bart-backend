@@ -25,7 +25,7 @@ const getAllInfo = async (departure, arrival) => {
     console.log("arrival", arrival);
 
     let routeRes = await axios.get(
-      `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&dest=${arrival}&key=${bartKey}&json=y`
+      `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&key=${bartKey}&json=y`
     );
     let fareRes = await axios.get(
       `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${departure}&dest=${arrival}&date=today&key=${bartKey}&json=y`
@@ -47,9 +47,11 @@ const getAllInfo = async (departure, arrival) => {
 
     //                             })
 
-    console.log("routeRes data station: ", routeRes.data);
+    console.log("routeRes stations: ", routeRes.data.root.station[0].etd);
     console.log("fareRes data: ", fareRes.data);
 
+    // NEED isEndpoint function that returns a boolean to check if station
+    // is endpoint
     return {
       routeData: routeRes,
       fareData: fareRes,
