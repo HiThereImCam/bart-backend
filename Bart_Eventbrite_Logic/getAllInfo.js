@@ -1,8 +1,16 @@
+// import findEndpoint from "../util/findEndpoint";
+
+import axios from "axios";
+import findEndpoint from "../util/findEndpoint.js";
+import manageLongLat from "./manageLongLat.js";
+
 const bartKey = process.env.BART_API_KEY;
 const eventbriteKey = process.env.EVENTBRITE_PRIVATE_KEY;
 
-const axios = require("axios");
-let { manageLongLat } = require("./manageLongLat.js");
+// const axios = require("axios");
+
+// const findEndpoint = require("../util/findEndpoint");
+// let { manageLongLat } = require("./manageLongLat.js");
 
 let config = {
   headers: {
@@ -50,6 +58,20 @@ const getAllInfo = async (departure, arrival) => {
     console.log("routeRes stations: ", routeRes.data.root.station[0].etd);
     console.log("fareRes data: ", fareRes.data);
 
+    let stationResInfo = {};
+
+    let stationObjects = routeRes.data.root.station[0].etd;
+    stationObjects.forEach((station) => {
+      stationResInfo[station.abbreviation] = station;
+    });
+    // let possibleLinesAbbr = stationObjects.map(
+    //   (station) => station.abbreviation
+    // );
+
+    console.log("stationResInfo: ", stationInfoRes);
+
+    let getEndpoint = findEndpoint(departure, arrival);
+
     // NEED isEndpoint function that returns a boolean to check if station
     // is endpoint
     return {
@@ -62,4 +84,6 @@ const getAllInfo = async (departure, arrival) => {
   }
 };
 
-module.exports.getAllInfo = getAllInfo;
+// module.exports.getAllInfo = getAllInfo;
+
+export default getAllInfo;

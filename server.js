@@ -2,13 +2,24 @@
     not gonna have bcrypt just yet
 */
 
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-const app = express();
-const bodyParser = require("body-parser");
+// const express = require("express");
+// const cors = require("cors");
+// const axios = require("axios");
+// const app = express();
+// const bodyParser = require("body-parser");
 
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import axios from "axios";
+import bodyParser from "body-parser";
+import getAllInfo from "./Bart_Eventbrite_Logic/getAllInfo.js";
+import manageEvents from "./Bart_Eventbrite_Logic/manageEvents.js";
+import manageFares from "./Bart_Eventbrite_Logic/manageFares.js";
+import manageRoutes from "./Bart_Eventbrite_Logic/manageRoutes.js";
+
+const app = express();
+
+// require("dotenv").config();
 const bartKey = process.env.BART_API_KEY;
 
 const port = process.env.PORT || 5000;
@@ -25,10 +36,10 @@ app.get("/", (req, res) => {
   res.send(`Port ${port}`);
 });
 
-var { getAllInfo } = require("./Bart_Eventbrite_Logic/getAllInfo.js");
-var { manageEvents } = require("./Bart_Eventbrite_Logic/manageEvents.js");
-var { manageFares } = require("./Bart_Eventbrite_Logic/manageFares.js");
-var { manageRoutes } = require("./Bart_Eventbrite_Logic/manageRoutes.js");
+// var { getAllInfo } = require("./Bart_Eventbrite_Logic/getAllInfo.js");
+// var { manageEvents } = require("./Bart_Eventbrite_Logic/manageEvents.js");
+// var { manageFares } = require("./Bart_Eventbrite_Logic/manageFares.js");
+// var { manageRoutes } = require("./Bart_Eventbrite_Logic/manageRoutes.js");
 
 /**
  * On start you are now receiving station data

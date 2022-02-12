@@ -36,4 +36,6 @@ let manageRoutes = (routes, arrival) => {
   return stationDepartures;
 };
 
-module.exports.manageRoutes = manageRoutes;
+// module.exports.manageRoutes = manageRoutes;
+
+export default manageRoutes;
