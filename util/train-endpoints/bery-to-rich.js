@@ -1,5 +1,6 @@
 const beryToRich = () => {
   return [
+    "BERY",
     "MLPT",
     "WARM",
     "FRMT",

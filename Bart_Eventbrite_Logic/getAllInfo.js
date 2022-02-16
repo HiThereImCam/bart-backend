@@ -4,6 +4,8 @@ import axios from "axios";
 import findEndpoint from "../util/findEndpoint.js";
 import manageLongLat from "./manageLongLat.js";
 
+// require("dotenv").config();
+
 const bartKey = process.env.BART_API_KEY;
 const eventbriteKey = process.env.EVENTBRITE_PRIVATE_KEY;
 
@@ -56,21 +58,22 @@ const getAllInfo = async (departure, arrival) => {
     //                             })
 
     console.log("routeRes stations: ", routeRes.data.root.station[0].etd);
+    console.log("estimates: ", routeRes.data.root.station[0].etd[0].estimate);
     console.log("fareRes data: ", fareRes.data);
 
-    let stationResInfo = {};
+    // let stationResInfo = {};
 
-    let stationObjects = routeRes.data.root.station[0].etd;
-    stationObjects.forEach((station) => {
-      stationResInfo[station.abbreviation] = station;
-    });
-    // let possibleLinesAbbr = stationObjects.map(
-    //   (station) => station.abbreviation
-    // );
+    // let stationObjects = routeRes.data.root.station[0].etd;
+    // stationObjects.forEach((station) => {
+    //   stationResInfo[station.abbreviation] = station;
+    // });
+    // // let possibleLinesAbbr = stationObjects.map(
+    // //   (station) => station.abbreviation
+    // // );
 
-    console.log("stationResInfo: ", stationInfoRes);
+    // console.log("stationResInfo: ", stationInfoRes);
 
-    let getEndpoint = findEndpoint(departure, arrival);
+    // let getEndpoint = findEndpoint(departure, arrival);
 
     // NEED isEndpoint function that returns a boolean to check if station
     // is endpoint

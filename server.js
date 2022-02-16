@@ -7,11 +7,12 @@
 // const axios = require("axios");
 // const app = express();
 // const bodyParser = require("body-parser");
-
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import axios from "axios";
 import bodyParser from "body-parser";
+
 import getAllInfo from "./Bart_Eventbrite_Logic/getAllInfo.js";
 import manageEvents from "./Bart_Eventbrite_Logic/manageEvents.js";
 import manageFares from "./Bart_Eventbrite_Logic/manageFares.js";

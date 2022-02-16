@@ -6,7 +6,7 @@ import beryToRich from "./train-endpoints/bery-to-rich.js";
 import transferPoints from "./transfer-points.js";
 // import sfOnlyStations from "./sf-only-stations.js";
 
-const findEndpoint = (departure, arrival) => {
+const findEndpoint = (departure, arrival, possibleStationLinesAbbr) => {
   // let sfoToRichLine = sfoToRich();
   let possibleEndpoints = [
     sfiaToRich,
@@ -19,6 +19,29 @@ const findEndpoint = (departure, arrival) => {
   // let sfOnlyStations = sfOnlyStations();
 
   // look for endpoints that only contain the arrival
+
+  for (let idx = 0; idx < possibleEndpoints.length; idx++) {
+    let stations = possibleEndpoints[idx]();
+
+    if (
+      stations.includes(possibleLinesAbbr[idx]) &&
+      stations.includes(arrival)
+    ) {
+      return possibleStationLinesAbbr;
+    } else {
+      // check for transfer points
+
+      let currentTransferPoints = stations.filter((station) =>
+        transferPoints.includes(station)
+      );
+
+      possibleEndpointsCpy = [...possibleEndpoints];
+      possibleEndpointsCpy = possibleEndpointsCpy.slice(
+        idx + 1,
+        possibleEndpoints.length
+      );
+    }
+  }
 
   // let endpoints = possibleEndpoints.filter((stationLine) => {
   //   let stations = stationLine();

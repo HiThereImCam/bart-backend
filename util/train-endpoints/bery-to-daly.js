@@ -1,5 +1,6 @@
 const beryToDaly = () => {
   return [
+    "BERY",
     "MLPT",
     "WARM",
     "FRMT",
