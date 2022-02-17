@@ -1,7 +1,7 @@
 // import findEndpoint from "../util/findEndpoint";
 
 import axios from "axios";
-import findEndpoint from "../util/findEndpoint.js";
+import findEndpoint from "../util/find-endpoint.js";
 import manageLongLat from "./manageLongLat.js";
 
 // require("dotenv").config();

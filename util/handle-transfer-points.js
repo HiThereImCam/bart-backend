@@ -20,10 +20,28 @@ import dublToDaly from "./train-endpoints/dubl-to-daly.js";
 import beryToDaly from "./train-endpoints/bery-to-daly.js";
 import beryToRich from "./train-endpoints/bery-to-rich.js";
 
-const handleTransferPoints = (arrival, possibleEndpoints) => {
+const handleTransferPoints = (direction, destination, transferPoints) => {
   // if found what do I return?
   // you return if powell to beryessa, I need to return
   // "BERY" -> not currently in the array of endpoints
+
+  const possiblelinesToTransferTo = [
+    sfiaToRich,
+    sfiaToAntc,
+    dublToDaly,
+    beryToRich,
+    beryToDaly,
+  ];
 };
 
 export default handleTransferPoints;
+
+//   let lineToTransferTo = possiblelinesToTransferTo(line => {
+//       let stationLineObj = line()
+//       let stationLine = stationLineObj[direction]
+
+//       if(stationLine.includes(destination)){
+
+//       }
+
+//     })
