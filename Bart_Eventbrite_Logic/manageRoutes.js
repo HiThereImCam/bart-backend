@@ -13,8 +13,8 @@ let manageRoutes = (routes, arrival) => {
   let stationDepartures = {};
 
   for (let i = 0; i < arrivalData.etd.length; i++) {
-    console.log("arrival: ", arrivalData.etd[i].destination);
-    console.log("abbr: ", arrivalData.etd[i].abbreviation);
+    // console.log("arrival: ", arrivalData.etd[i].destination);
+    // console.log("abbr: ", arrivalData.etd[i].abbreviation);
 
     /**
      * Need to create a test case that if abbr != destination

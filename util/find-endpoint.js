@@ -6,10 +6,11 @@ import beryToRich from "./train-endpoints/bery-to-rich.js";
 import transferPoints from "./transfer-points.js";
 // import sfOnlyStations from "./sf-only-stations.js";
 
-import getStationLine from "./get-station-line";
-import handleTransferPoints from "./handle-transfer-points";
+// import getStationLine from "./get-station-line";
+// import getStationLine from "./get-station-line";
+// import handleTransferPoints from "./handle-transfer-points";
 
-const findEndpoint = (direction, arrival, possibleStationLineAbbr) => {
+const findEndpoint = (direction, destination, possibleStationLineAbbr) => {
   // let sfoToRichLine = sfoToRich();
   // let possibleEndpoints = [
   //   sfiaToRich,
@@ -18,23 +19,28 @@ const findEndpoint = (direction, arrival, possibleStationLineAbbr) => {
   //   beryToRich,
   //   beryToDaly,
   // ];
-
-  let stationLine = getStationLine(possibleStationLineAbbr);
-  let transferPoints = transferPoints(); // returns an array of transfer points
-  let stationTransferPoints = transferPoints.filter((stationAbbr) =>
-    stationLine.includes(stationAbbr)
-  );
-  // let sfOnlyStations = sfOnlyStations();
-
-  // look for endpoints that only contain the arrival
-
-  for (let idx = 0; idx < stationLine.length; idx++) {
-    if (stationLine[idx][direction].includes(arrival)) {
-      return possibleStationLineAbbr;
-    } else if (stationTransferPoints) {
-      handleTransferPoints(direction, arrival, stationTransferPoints);
-    }
-  }
+  // const [stations, stationLine] = getStationLine(
+  //   direction,
+  //   possibleStationLineAbbr
+  // );
+  // let transferPoints = transferPoints(); // returns an array of transfer points
+  // let stationTransferPoints = transferPoints.filter((stationAbbr) =>
+  //   stations.includes(stationAbbr)
+  // );
+  // // let sfOnlyStations = sfOnlyStations();
+  // // look for endpoints that only contain the destination
+  // for (let idx = 0; idx < stations.length; idx++) {
+  //   if (stations[idx].includes(destination)) {
+  //     return possibleStationLineAbbr;
+  //   } else if (stationTransferPoints) {
+  //     handleTransferPoints(
+  //       direction,
+  //       destination,
+  //       stationTransferPoints,
+  //       stationLine
+  //     );
+  //   }
+  // }
 };
 
 // let endpoints = possibleEndpoints.filter((stationLine) => {
