@@ -109,3 +109,21 @@ app.get("/getStations", async (req, res) => {
     console.log("Error: ", e);
   }
 });
+
+
+
+
+
+/*
+  CV => Hayw
+    Node    vistedQueue  UnvisitedQueue Sum
+    CV       []           [WDUB, BayF]   0
+    WDUB     [CV]         [BayF, Dub]    ?
+    BayF     [CV, WDUB]   [DUB]
+  
+  [CV, WDUB, BAYF]
+  return visited queue?
+
+  if 
+
+*/

@@ -4,10 +4,10 @@ class Node {
     this.adjacents = [];
   }
 
-  addAdjacent(adjacentNode, weight) {
+  addAdjacent(adjacentNode) {
     let keys = this.adjacents.map((nodeObj) => nodeObj.node.value);
     if (!keys.includes(adjacentNode.value)) {
-      this.adjacents.push({ node: adjacentNode, weight: weight });
+      this.adjacents.push({ node: adjacentNode });
     }
   }
 }

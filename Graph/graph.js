@@ -21,12 +21,12 @@ class Graph {
     }
   }
 
-  addEdge(station, nextStation, weight) {
+  addEdge(station, nextStation) {
     const stationNode = this.addVertex(station);
     const nextStationNode = this.addVertex(nextStation);
 
-    stationNode.addAdjacent(nextStationNode, weight);
-    nextStationNode.addAdjacent(stationNode, weight);
+    stationNode.addAdjacent(nextStationNode);
+    nextStationNode.addAdjacent(stationNode);
 
     return [station, nextStation];
   }
