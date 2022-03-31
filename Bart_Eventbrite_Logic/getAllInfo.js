@@ -38,12 +38,10 @@ let config = {
 
 const getAllInfo = async (departure, destination) => {
   try {
-    console.log("depart", departure);
-    console.log("destination", destination);
+    // let routeRes = await axios.get(
+    //   `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&key=${bartKey}&json=y`
+    // );
 
-    let routeRes = await axios.get(
-      `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${departure}&key=${bartKey}&json=y`
-    );
     let fareRes = await axios.get(
       `http://api.bart.gov/api/sched.aspx?cmd=fare&orig=${departure}&dest=${destination}&date=today&key=${bartKey}&json=y`
     );
@@ -69,11 +67,12 @@ const getAllInfo = async (departure, destination) => {
       }
     });
 
-    let result = getPath(graph, departure, destination);
+    let path = getPath(graph, departure, destination);
+    let getStationLines = getStationLines(path);
 
-    console.dir(routeRes.data, { depth: null });
+    // console.dir(routeRes.data, { depth: null });
 
-    console.log("result: ", result);
+    console.dir(result, { depth: null });
 
     // graph.addEdge("HAYW", "SHAY");
 
@@ -82,10 +81,7 @@ const getAllInfo = async (departure, destination) => {
     // console.log("bayfair adjacents: ", graph.nodes.get("BAYF").adjacents);
 
     // console.log("routeRes stations: ", routeRes.data.root.station[0].etd);
-    // console.log(
-    //   "first destination: ",
-    //   routeRes.data.root.station[0].etd[0].destination
-    // );
+    console.dir(routeRes.data.root.station, { depth: null });
     // console.log(
     //   "first estimates: ",
     //   routeRes.data.root.station[0].etd[0].estimate

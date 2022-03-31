@@ -28,6 +28,7 @@ const backtrace = (pathToParent, departure, destination) => {
 
 const getPath = (graph, departure, destination) => {
   let pathToParent = new Map();
+
   //   let queue = [graph[departure]];
 
   let queue = [graph.nodes.get(departure)];
@@ -70,4 +71,33 @@ const getPath = (graph, departure, destination) => {
 
 export default getPath;
 
-// bfs
+/*
+  shape of the result should be
+  result = {
+    path: [],
+    transferPoint: transferPoint,
+    transferLine
+  }
+
+
+  option 1: the node should know it's a transfer point
+  option 2: result array should check for transfer points along the line
+    - if found
+        check lines going through station via another api call (?)
+        after api call
+        
+
+    given the transferPoint, the destination, and the endpoints running through the currentStation
+    find the endpoint that holds both the transferPoint and the destination
+      - the index of the transferPoint will always be less than the destination 
+
+    how do I deal with 19th street and MacArthur 
+
+    if there are two transfer points
+
+    take daly city via the blue line 
+    transfer at bay fair via the orange line
+    arrive at hayw
+    
+    
+*/

@@ -67,6 +67,7 @@ app.get("/route-submission", (req, res) => {
    */
   getAllInfo(departure, arrival).then((apiResponse) => {
     // eventData
+
     const { routeData, fareData } = apiResponse;
 
     let departures = manageRoutes(routeData, arrival);
@@ -109,10 +110,6 @@ app.get("/getStations", async (req, res) => {
     console.log("Error: ", e);
   }
 });
-
-
-
-
 
 /*
   CV => Hayw

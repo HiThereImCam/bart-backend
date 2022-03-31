@@ -1,3 +1,5 @@
+import transferPoints from "../util/transfer-points.js";
+
 class Node {
   constructor(value) {
     this.value = value;
