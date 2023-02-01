@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "mixin-deep": "^2.0.1",
     "mongodb": "^3.3.4",
-    "mongoose": "^5.7.12",
+    "mongoose": "^5.13.15",
     "set-value": "^3.0.1"
   }
 }
